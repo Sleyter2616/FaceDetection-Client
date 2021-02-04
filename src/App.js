@@ -8,11 +8,6 @@ import SignIn from "./Components/SignIn/SignIn";
 import Register from "./Components/Register/Register";
 import "./App.css";
 import Particles from "react-particles-js";
-import Clarifai from "clarifai";
-
-const app = new Clarifai.App({
-	apiKey: "79854ede1ad542e0a30c66e80d113267",
-});
 
 const particlesOptions = {
 	particles: {
@@ -79,11 +74,17 @@ class App extends Component {
 	onPictureSubmit = () => {
 		this.setState({imageUrl: this.state.input});
 
-		app.models
-			.predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
+		fetch("https://serene-earth-54343.herokuapp.com/imageurl", {
+			method: "post",
+			headers: {"Content-Type": "application/json"},
+			body: JSON.stringify({
+				input: this.state.input,
+			}),
+		})
+			.then((response) => response.json())
 			.then((response) => {
 				if (response) {
-					fetch("http://localhost:3000/image", {
+					fetch("https://serene-earth-54343.herokuapp.com/image", {
 						method: "put",
 						headers: {"Content-Type": "application/json"},
 						body: JSON.stringify({
@@ -104,7 +105,7 @@ class App extends Component {
 	};
 	onRouteChange = (route) => {
 		if (route === "signout") {
-			this.setState({isSignedIn: false});
+			this.setState(initialState);
 		} else if (route === "home") {
 			this.setState({isSignedIn: true});
 		}

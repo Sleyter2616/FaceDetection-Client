@@ -19,7 +19,8 @@ class Register extends React.Component {
 		this.setState({password: event.target.value});
 	};
 	onSubmitRegister = () => {
-		fetch("http://localhost:3000/register", {
+		console.log(this.state.name, this.state.email, this.state.password);
+		fetch("https://serene-earth-54343.herokuapp.com/register", {
 			method: "post",
 			headers: {"Content-Type": "application/json"},
 			body: JSON.stringify({
@@ -30,7 +31,7 @@ class Register extends React.Component {
 		})
 			.then((response) => response.json())
 			.then((user) => {
-				if (user) {
+				if (user.id) {
 					this.props.loadUser(user);
 					this.props.onRouteChange("home");
 				}
